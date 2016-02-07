@@ -47,7 +47,8 @@ public:
     }
 
     void clear(){
-        delete m_items;
+        if (m_size >0)
+            delete m_items;
         m_size = 0;
     }
 
