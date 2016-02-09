@@ -3,7 +3,8 @@
 #include "List.h"
 #include "Map.h"
 #include <iostream>
-
+#include "Function.h"
+#include "log.h"
 
 void testString(){
     String* s = new String();
@@ -146,8 +147,15 @@ void testMap(){
 
 int main()
 {
+     ssvu::FastFunc<void()> testEqual =[] {
+         log("test");
+     };
+
     testString();
 
+    testEqual();
+
+    testString();
     testList();
     testMap();
 
