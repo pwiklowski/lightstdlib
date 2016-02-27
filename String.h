@@ -10,6 +10,11 @@ public:
     String(){
         m_size = 0;
     }
+    ~String(){
+        if (m_size>0)
+            delete[] m_str;
+    }
+
     String(const char* str){
         m_size = 0;
         unsigned int len = strlen(str);
@@ -17,21 +22,23 @@ public:
         for (unsigned int i=0; i<len; i++)
             m_str[i] = str[i];
         m_size = len;
+        m_str[m_size] = 0;
     }
 
     String(const String& str){
         m_size = 0;
-        unsigned int len = str.m_size;
+        size_t len = str.m_size;
         m_str = new char[len+1];
         for (unsigned int i=0; i<len; i++)
             m_str[i] = str.m_str[i];
         m_size = len;
+        m_str[m_size] = 0;
     }
 
 
     void append(const String& str){
         unsigned int len = str.m_size;
-        resize(m_size + len);
+        resize(m_size + len+1);
 
         for (unsigned int i=0; i<len; i++){
             m_str[m_size++] = str.m_str[i];
@@ -39,15 +46,16 @@ public:
     }
     void append(char* str){
         unsigned int len = strlen(str);
-        resize(m_size + len);
+        resize(m_size + len+1);
 
         for (unsigned int i=0; i<len; i++){
             m_str[m_size++] = str[i];
         }
     }
     void append(char c){
-        resize(m_size +1);
-        m_str[m_size++] = c;
+        resize(m_size +2);
+        m_str[m_size] = c;
+        m_size++;
     }
 
 
@@ -61,6 +69,12 @@ public:
         if (memcmp(a.m_str, m_str, m_size) != 0) return false;
 
         return true;
+    }
+    String& operator = (String a){
+        m_str = new char[a.m_size +1];
+        for (unsigned int i=0; i<a.m_size; i++)
+            m_str[i] = a.m_str[i];
+        m_size =a.m_size;
     }
 
     bool operator==(const char* a){
@@ -104,6 +118,9 @@ public:
     }
 
     char* c_str(){
+
+        if (m_size == 0)
+            return nullptr;
         m_str[m_size] = 0;
         return m_str;
     }

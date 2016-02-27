@@ -8,6 +8,7 @@ template <class T> class List{
 public:
     List<T>(){
         m_size = 0;
+        m_items = nullptr;
     }
     List<T>& operator = (const List<T> & v) {
         if (m_size > 0)
@@ -18,7 +19,10 @@ public:
             m_items[i] = v.m_items[i];
         return *this;
     }
-
+    ~List<T>(){
+        if (m_size>0)
+            delete[] m_items;
+    }
 
     bool operator == (List l){
         if (l.size() != size()) return false;
@@ -30,39 +34,41 @@ public:
         return true;
     }
 
-    void append(const T& item){
+    void append(const T item){
         reserve(m_size+1);
         m_items[m_size] = item;
         m_size++;
     }
     void reserve(unsigned int capacity) {
-        T * newBuffer = new T[capacity];
+        T* newBuffer = new T[capacity];
 
-        for (unsigned int i = 0; i < m_size; i++)
+        for (unsigned int i = 0; i < m_size; i++){
             newBuffer[i] = m_items[i];
-
-        if (m_size != 0)
+        }
+        if(m_size >0)
             delete[] m_items;
         m_items = newBuffer;
     }
 
     void clear(){
         if (m_size >0)
-            delete m_items;
+            delete[] m_items;
         m_size = 0;
     }
 
     void remove(unsigned int item){
-        T * newBuffer = new T[m_size -1];
+        T* newBuffer = nullptr;
+        if (m_size >0){
+            newBuffer = new T[m_size -1];
 
-        for (unsigned int i = 0; i <item; i++)
-            newBuffer[i] = m_items[i];
+            for (unsigned int i = 0; i <item; i++)
+                newBuffer[i] = m_items[i];
 
-        for (unsigned int i = item +1; i <m_size; i++)
-            newBuffer[i-1] = m_items[i];
+            for (unsigned int i = item +1; i <m_size; i++)
+                newBuffer[i-1] = m_items[i];
 
-
-        if (m_size != 0)
+        }
+        if (m_size > 0)
             delete[] m_items;
         m_items = newBuffer;
         m_size--;

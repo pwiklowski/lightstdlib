@@ -3,7 +3,6 @@
 #include "List.h"
 #include "Map.h"
 #include <iostream>
-#include "Function.h"
 #include "log.h"
 
 void testString(){
@@ -11,6 +10,8 @@ void testString(){
     s->append("test");
 
     assert(s->size() == 4);
+
+    char* x = s->c_str();
 
     assert(strlen(s->c_str()) == 4);
 
@@ -46,8 +47,7 @@ void testString(){
     String t1 = c->substr(0, 4);
     String t2 = c->substr(4, 4);
     String t3 = c->substr(4);
-
-
+    delete c;
 
     String str("There are two needles in this haystack with needles.");
     String str2 ("needle");
@@ -121,9 +121,19 @@ void testList(){
 
     for ( auto i = l.begin(); i !=l.end(); i++ ) {
         int test = *i;
-        std::cout << test;
+        std::cout << test << std::endl;
 
     }
+
+
+    List<String> li;
+    li.append("test1");
+    li.append("test2");
+    li.append("test3");
+    li.append("test4");
+    li.append("test5");
+    for (String k: li) std::cout << k.c_str() << std::endl;
+
 }
 
 void testMap(){
@@ -131,33 +141,45 @@ void testMap(){
 
     map.insert("test1", 1);
 
-    assert(*map.get("test1") == 1);
+    assert(map.get("test1") == 1);
 
-   map.remove("test1");
+   //map.remove("test1");
 
-    assert(map.get("test1") == 0);
+ //   assert(map.get("test1") == 0);
 
     map.insert("test2", 2);
     map.insert("test3", 3);
     map.insert("test4", 4);
     map.insert("test5", 5);
+
+    int a = map.get("test1");
+    a = map.get("test2");
+    a = map.get("test3");
+    a = map.get("test4");
+    a = map.get("test5");
+
+    for (String k: map){
+        std::cout << k.c_str();
+        std::cout << std::endl;
+    }
+
+
+
+    assert(map.get("test1") == 1);
+    assert(map.get("test2") == 2);
+    assert(map.get("test3") == 3);
+    assert(map.get("test4") == 4);
+    assert(map.get("test5") == 5);
+
 }
 
 
 
 int main()
 {
-     ssvu::FastFunc<void()> testEqual =[] {
-         log("test");
-     };
-
-    testString();
-
-    testEqual();
-
-    testString();
-    testList();
-    testMap();
+   testString();
+   testList();
+   testMap();
 
 
     return 0;

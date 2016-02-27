@@ -8,14 +8,17 @@ public:
     Map(){
 
     }
+    ~Map(){
+    }
 
-    Value* get(Key k){
+
+
+    Value get(Key k){
         for(unsigned int i = 0; i< m_keys.size(); i++){
             if (k == m_keys.at(i)){
-                return &m_values.at(i);
+                return m_values.at(i);
             }
         }
-        return 0;
     }
 
     void insert(Key k, Value v){
