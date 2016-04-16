@@ -202,30 +202,30 @@ void testMap(){
 
 void testCbor(){
     cbor* v = cbor::array();
-    v->append(new cbor("href"));
-    v->append(new cbor("rt"));
+    v->append(cbor::string("href"));
+    v->append(cbor::string("rt"));
     delete v;
 
 
     cbor* root = new cbor(CBOR_TYPE_ARRAY);
     cbor* device = new cbor(CBOR_TYPE_MAP);
 
-    device->append(new cbor("di"), new cbor("0685B960-736F-46F7-BEC0-9E6CBD61ADC1"));
-    device->append(new cbor("n"), new cbor("name"));
-    device->append(new cbor("test"), cbor::number(45));
+    device->append(cbor::string("di"), cbor::string("0685B960-736F-46F7-BEC0-9E6CBD61ADC1"));
+    device->append(cbor::string("n"), cbor::string("name"));
+    device->append(cbor::string("test"), cbor::number(45));
 
     cbor* links = cbor::array();
 
     cbor* val = cbor::map();
 
-    val->append(new cbor("href"), new cbor("href"));
-    val->append(new cbor("rt"), new cbor("rt"));
-    val->append(new cbor("if"), new cbor("if"));
-    val->append(new cbor("type"), new cbor("application/cbor"));
+    val->append(cbor::string("href"), cbor::string("href"));
+    val->append(cbor::string("rt"), cbor::string("rt"));
+    val->append(cbor::string("if"), cbor::string("if"));
+    val->append(cbor::string("type"), cbor::string("application/cbor"));
 
     links->append(val);
 
-    device->append(new cbor("links"), links);
+    device->append(cbor::string("links"), links);
 
     root->append(device);
 
