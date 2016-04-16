@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <cstring>
+#include "List.h"
 
 class String{
 
@@ -135,6 +136,24 @@ public:
             delete[] m_str;
         m_str = new_buf;
     }
+
+    List<String> split(String separator){
+        List<String> list;
+        int pos;
+        int start = 0;
+
+        while((pos = find(separator, start)) !=-1){
+            String s = substr(start, pos-start);
+            //s.append('\0');
+            list.append(s);
+            start = pos + separator.size();
+        }
+        String s = substr(start, m_size-start);
+        list.append(s);
+
+        return list;
+    }
+
 
 private:
     char* m_str;

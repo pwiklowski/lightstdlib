@@ -4,6 +4,7 @@
 #include "Map.h"
 #include <iostream>
 #include "log.h"
+#include "cbor.h"
 
 void testString(){
     String* s = new String();
@@ -64,6 +65,19 @@ void testString(){
 
     found=str.find(".");
     assert(found == 51);
+
+
+
+    String splitTest("1,2,3,4");
+
+    List<String> res = splitTest.split(",");
+
+    assert(res.size() == 4);
+
+
+
+
+
 }
 
 
@@ -112,7 +126,7 @@ void testList(){
     assert(lista.size() == 0);
 
 
-    List<int> l;
+    List<uint8_t> l;
     l.append(1);
     l.append(2);
     l.append(3);
@@ -133,6 +147,19 @@ void testList(){
     li.append("test4");
     li.append("test5");
     for (String k: li) std::cout << k.c_str() << std::endl;
+
+
+
+   List<uint8_t> l2;
+
+   l2 = l;
+
+   assert(l2.size() == 5);
+   assert(l2.at(0) == 1);
+   assert(l2.at(1) == 2);
+   assert(l2.at(2) == 3);
+   assert(l2.at(3) == 4);
+   assert(l2.at(4) == 5);
 
 }
 
@@ -173,14 +200,94 @@ void testMap(){
 
 }
 
+void testCbor(){
+    cbor* v = cbor::array();
+    v->append(new cbor("href"));
+    v->append(new cbor("rt"));
+    delete v;
 
+
+    cbor* root = new cbor(CBOR_TYPE_ARRAY);
+    cbor* device = new cbor(CBOR_TYPE_MAP);
+
+    device->append(new cbor("di"), new cbor("0685B960-736F-46F7-BEC0-9E6CBD61ADC1"));
+    device->append(new cbor("n"), new cbor("name"));
+    device->append(new cbor("test"), cbor::number(45));
+
+    cbor* links = cbor::array();
+
+    cbor* val = cbor::map();
+
+    val->append(new cbor("href"), new cbor("href"));
+    val->append(new cbor("rt"), new cbor("rt"));
+    val->append(new cbor("if"), new cbor("if"));
+    val->append(new cbor("type"), new cbor("application/cbor"));
+
+    links->append(val);
+
+    device->append(new cbor("links"), links);
+
+    root->append(device);
+
+
+    std::cout << cbor::toJsonString(root).c_str() << std::endl;
+
+
+    delete root;
+
+
+    String str("{\"rt\": \"oic.r.light.dimming\", \"dimmingSetting\": 5, \"range\": \"0,255\"}");
+    char* p = str.c_str();
+
+    cbor* obj1;
+    cbor::parse_object(&obj1, str.c_str());
+
+    std::cout << cbor::toJsonString(obj1).c_str() << std::endl;
+
+
+    cbor* n1;
+    cbor::parse_number(&n1,"123");
+    assert(123 == n1->toInt());
+
+    cbor::parse_number(&n1," 123");
+    assert(123 == n1->toInt());
+
+    cbor::parse_number(&n1,"123 ");
+    assert(123 == n1->toInt());
+
+    cbor* n2;
+    cbor::parse_number(&n2,"-123");
+
+    int a = n2->toInt();
+    assert(-123 == n2->toInt());
+
+
+    cbor* s1;
+    cbor::parse_string(&s1, "\"rt\"");
+
+    cbor* arr;
+    cbor::parse_array(&arr, "[1,2,3,4,5,6]");
+
+    assert(arr->toArray()->size() == 6);
+    int i = arr->toArray()->at(0)->toInt();
+    assert(arr->toArray()->at(0)->toInt() == 1);
+    i = arr->toArray()->at(1)->toInt();
+    assert(arr->toArray()->at(1)->toInt() == 2);
+    assert(arr->toArray()->at(2)->toInt() == 3);
+    assert(arr->toArray()->at(3)->toInt() == 4);
+    assert(arr->toArray()->at(4)->toInt() == 5);
+    assert(arr->toArray()->at(5)->toInt() == 6);
+
+
+}
 
 int main()
 {
-   testString();
-   testList();
-   testMap();
-
+   //testString();
+   //testList();
+   //testMap();
+   testCbor();
+////dodac cos na kopiowanie list
 
     return 0;
 }

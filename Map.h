@@ -9,6 +9,8 @@ public:
 
     }
     ~Map(){
+        m_keys.clear();
+        m_values.clear();
     }
 
 
@@ -21,9 +23,29 @@ public:
         }
     }
 
+    bool has(Key k){
+        for(unsigned int i = 0; i< m_keys.size(); i++){
+            if (k == m_keys.at(i)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     void insert(Key k, Value v){
-        m_keys.append(k);
-        m_values.append(v);
+        //TODO: nie dziala to
+        if (has(k)){
+            for(unsigned int i = 0; i< m_keys.size(); i++){
+                if (k == m_keys.at(i)){
+                    m_values.replace(i, v);
+                }
+            }
+        }else{
+            m_keys.append(k);
+            m_values.append(v);
+        }
+
+
     }
 
     void remove(Key k){
@@ -47,6 +69,9 @@ public:
         return &m_keys.at(size());
     }
 
+    Key* last() {
+        return &m_keys.at(size()-1);
+    }
 private:
     List<Key> m_keys;
     List<Value> m_values;

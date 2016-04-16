@@ -1,8 +1,8 @@
-#ifndef LIST_H
-#define LIST_H
+#ifndef LISTA_H
+#define LISTA_H
 
 #include <cstddef>
-#include <vector>
+
 
 template <class T> class List{
 public:
@@ -10,6 +10,16 @@ public:
         m_size = 0;
         m_items = nullptr;
     }
+
+    List<T>(const List<T>& l){
+        m_size = l.m_size;
+        m_items = new T [l.m_size];
+        for (unsigned int i = 0; i < m_size; i++)
+            m_items[i] = l.m_items[i];
+    }
+
+
+
     List<T>& operator = (const List<T> & v) {
         if (m_size > 0)
             delete m_items;
@@ -20,15 +30,15 @@ public:
         return *this;
     }
     ~List<T>(){
-        if (m_size>0)
+       if (m_size>0)
             delete[] m_items;
     }
 
-    bool operator == (List l){
-        if (l.size() != size()) return false;
+    bool operator == (const List<T> l){
+        if (l.m_size != m_size) return false;
 
         for (unsigned int i=0; i<size(); i++){
-            if (at(i) != l.at(i)) return false;
+            if (m_items[i] != l.m_items[i]) return false;
         }
 
         return true;
@@ -56,6 +66,13 @@ public:
         m_size = 0;
     }
 
+    void replace(size_t item, T value){
+        if (item<m_size){
+            m_items[item] = value;
+        }
+    }
+
+
     void remove(unsigned int item){
         T* newBuffer = nullptr;
         if (m_size >0){
@@ -78,6 +95,10 @@ public:
 
     T* begin() {
         return m_items;
+    }
+
+    T* last() {
+        return &m_items[m_size - 1];
     }
 
     T* end() {
