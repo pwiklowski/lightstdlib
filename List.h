@@ -13,7 +13,8 @@ public:
 
     List<T>(const List<T>& l){
         m_size = l.m_size;
-        m_items = new T [l.m_size];
+        if (m_size >0)
+            m_items = new T [l.m_size];
         for (unsigned int i = 0; i < m_size; i++)
             m_items[i] = l.m_items[i];
     }
@@ -21,10 +22,9 @@ public:
 
 
     List<T>& operator = (const List<T> & v) {
-        if (m_size > 0)
-            delete m_items;
         m_size = v.m_size;
-        m_items = new T [v.m_size];
+        if (m_size >0)
+            m_items = new T [v.m_size];
         for (unsigned int i = 0; i < m_size; i++)
             m_items[i] = v.m_items[i];
         return *this;
@@ -34,10 +34,10 @@ public:
             delete[] m_items;
     }
 
-    bool operator == (const List<T> l){
+    bool operator == (const List<T> l) const {
         if (l.m_size != m_size) return false;
 
-        for (unsigned int i=0; i<size(); i++){
+        for (unsigned int i=0; i<m_size; i++){
             if (m_items[i] != l.m_items[i]) return false;
         }
 
@@ -105,11 +105,11 @@ public:
         return  m_items + size();
     }
 
-    size_t size(){
+    size_t size() const{
         return m_size;
     }
 
-    T& at(unsigned int i){
+    T& at(unsigned int i) const{
         return m_items[i];
     }
 
