@@ -170,10 +170,6 @@ void testMap(){
 
     assert(map.get("test1") == 1);
 
-   //map.remove("test1");
-
- //   assert(map.get("test1") == 0);
-
     map.insert("test2", 2);
     map.insert("test3", 3);
     map.insert("test4", 4);
@@ -198,94 +194,140 @@ void testMap(){
     assert(map.get("test4") == 4);
     assert(map.get("test5") == 5);
 
+
+
+
+    Map<String, int> test;
+
+    test.insert("test1", 1);
+
+    assert(test.get("test1") == 1);
+    assert(test.size() == 1);
+
+    test.insert("test2", 2);
+
+    assert(test.get("test2") == 2);
+    assert(test.size() == 2);
+
+
+    test.insert("test2", 4);
+    assert(test.get("test2") == 4);
+    assert(test.size() == 2);
+
+    Map<cbor, cbor> t;
+
+    t.insert("test1",1);
+
+
+
+    cbor aa = t.get("test1");
+
+    assert(t.get("test1").toInt() == 1);
+    assert(t.size() == 1);
+
+
+    t.insert("test1", 4);
+
+    assert(t.get("test1").toInt() == 4);
+    assert(t.size() == 1);
+
+
 }
 
 void testCbor(){
-    cbor* v = cbor::array();
-    v->append(cbor::string("href"));
-    v->append(cbor::string("rt"));
-    delete v;
+    cbor trzy(3);
+
+    cbor czt(4);
+
+    assert(trzy == trzy);
+    assert(trzy != czt);
+
+    assert(*new cbor("sdf") != *new cbor(4));
+
+    assert(*new cbor("dupa") != *new cbor("dupa2"));
+    assert(*new cbor("dupa") == *new cbor("dupa"));
+
+    cbor v(CBOR_TYPE_ARRAY);
+    v.append("href");
+    v.append("rt");
 
 
-    cbor* root = new cbor(CBOR_TYPE_ARRAY);
-    cbor* device = new cbor(CBOR_TYPE_MAP);
+    cbor root(CBOR_TYPE_ARRAY);
+    cbor device(CBOR_TYPE_MAP);
 
-    device->append(cbor::string("di"), cbor::string("0685B960-736F-46F7-BEC0-9E6CBD61ADC1"));
-    device->append(cbor::string("n"), cbor::string("name"));
-    device->append(cbor::string("test"), cbor::number(45));
+    device.append("di", "0685B960-736F-46F7-BEC0-9E6CBD61ADC1");
+    device.append("n","name");
+    device.append("test", 45);
 
-    cbor* links = cbor::array();
+    cbor links(CBOR_TYPE_ARRAY);
 
-    cbor* val = cbor::map();
+    cbor val(CBOR_TYPE_MAP);
 
-    val->append(cbor::string("href"), cbor::string("href"));
-    val->append(cbor::string("rt"), cbor::string("rt"));
-    val->append(cbor::string("if"), cbor::string("if"));
-    val->append(cbor::string("type"), cbor::string("application/cbor"));
+    val.append("href", "href");
+    val.append("rt", "rt");
+    val.append("if", "if");
+    val.append("type", "application/cbor");
 
-    links->append(val);
+    links.append(val);
 
-    device->append(cbor::string("links"), links);
+    device.append("links", links);
 
-    root->append(device);
+    root.append(device);
 
-
-    std::cout << cbor::toJsonString(root).c_str() << std::endl;
-
-
-    delete root;
+    std::cout << cbor::toJsonString(&root).c_str() << std::endl;
 
 
     String str("{\"rt\": \"oic.r.light.dimming\", \"dimmingSetting\": 5, \"range\": \"0,255\"}");
     char* p = str.c_str();
 
-    cbor* obj1;
-    cbor::parse_object(&obj1, str.c_str());
+    cbor obj1;
+    obj1.parse_value(str.c_str());
 
-    std::cout << cbor::toJsonString(obj1).c_str() << std::endl;
-
-
-    cbor* n1;
-    cbor::parse_number(&n1,"123");
-    assert(123 == n1->toInt());
-
-    cbor::parse_number(&n1," 123");
-    assert(123 == n1->toInt());
-
-    cbor::parse_number(&n1,"123 ");
-    assert(123 == n1->toInt());
-
-    cbor* n2;
-    cbor::parse_number(&n2,"-123");
-
-    int a = n2->toInt();
-    assert(-123 == n2->toInt());
+    std::cout << cbor::toJsonString(&obj1).c_str() << std::endl;
 
 
-    cbor* s1;
-    cbor::parse_string(&s1, "\"rt\"");
+    cbor n1;
+    n1.parse_number("123");
+    assert(123 == n1.toInt());
 
-    cbor* arr;
-    cbor::parse_array(&arr, "[1,2,3,4,5,6]");
+    n1.parse_number(" 123");
+    assert(123 == n1.toInt());
 
-    assert(arr->toArray()->size() == 6);
-    int i = arr->toArray()->at(0)->toInt();
-    assert(arr->toArray()->at(0)->toInt() == 1);
-    i = arr->toArray()->at(1)->toInt();
-    assert(arr->toArray()->at(1)->toInt() == 2);
-    assert(arr->toArray()->at(2)->toInt() == 3);
-    assert(arr->toArray()->at(3)->toInt() == 4);
-    assert(arr->toArray()->at(4)->toInt() == 5);
-    assert(arr->toArray()->at(5)->toInt() == 6);
+    n1.parse_number("123 ");
+    assert(123 == n1.toInt());
+
+    cbor n2;
+    n2.parse_number("-123");
+
+    int a = n2.toInt();
+    assert(-123 == n2.toInt());
+
+
+    cbor s1;
+    s1.parse_string("\"rt\"");
+
+
+    cbor arr;
+    arr.parse_array("[1,2,3,4,5,6]");
+
+    assert(arr.toArray()->size() == 6);
+    int i = arr.toArray()->at(0).toInt();
+    assert(arr.toArray()->at(0).toInt() == 1);
+    i = arr.toArray()->at(1).toInt();
+    assert(arr.toArray()->at(1).toInt() == 2);
+    assert(arr.toArray()->at(2).toInt() == 3);
+    assert(arr.toArray()->at(3).toInt() == 4);
+    assert(arr.toArray()->at(4).toInt() == 5);
+    assert(arr.toArray()->at(5).toInt() == 6);
 
 
 }
 
 int main()
 {
-   //testString();
-   //testList();
-   //testMap();
+   testString();
+   testList();
+   testMap();
    testCbor();
 ////dodac cos na kopiowanie list
 
