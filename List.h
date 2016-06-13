@@ -3,7 +3,6 @@
 
 #include <cstddef>
 
-
 template <class T> class List{
 public:
     List<T>(){
@@ -22,7 +21,11 @@ public:
 
 
     List<T>& operator = (const List<T> & v) {
+       if (m_size>0)
+            delete[] m_items;
         m_size = v.m_size;
+
+
         if (m_size >0)
             m_items = new T [v.m_size];
         for (unsigned int i = 0; i < m_size; i++)
@@ -75,7 +78,7 @@ public:
 
     void remove(unsigned int item){
         T* newBuffer = nullptr;
-        if (m_size >0){
+        if (m_size >1){
             newBuffer = new T[m_size -1];
 
             for (unsigned int i = 0; i <item; i++)
@@ -89,7 +92,6 @@ public:
             delete[] m_items;
         m_items = newBuffer;
         m_size--;
-
     }
 
 

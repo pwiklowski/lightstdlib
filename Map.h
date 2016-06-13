@@ -2,17 +2,38 @@
 #define MAP_H
 
 #include "List.h"
+#include "log.h"
 
 template <typename Key, typename Value> class Map{
 public:
     Map(){
 
     }
+    Map(const Map& m){
+        m_keys = m.m_keys;
+        m_values = m.m_values;
+    }
     ~Map(){
         m_keys.clear();
         m_values.clear();
     }
 
+    Map& operator = (const Map& m){
+        m_keys.clear();
+        m_values.clear();
+
+        m_keys = m.m_keys;
+        m_values = m.m_values;
+        return *this;
+    }
+
+
+
+
+    void clear(){
+        m_keys.clear();
+        m_values.clear();
+    }
 
 
     Value get(Key k){

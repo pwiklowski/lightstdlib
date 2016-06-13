@@ -76,6 +76,7 @@ public:
         for (unsigned int i=0; i<a.m_size; i++)
             m_str[i] = a.m_str[i];
         m_size =a.m_size;
+        return *this;
     }
 
     bool operator==(const char* a){
