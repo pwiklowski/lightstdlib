@@ -3,124 +3,256 @@
 
 #include <cstddef>
 
+template <class T> class List;
+
+
+
+template <class T> class Node
+{
+public:
+    Node(T val, Node<T>* next){
+        this->val = val;
+        this->next = next;
+    }    T val;
+    Node<T> *next;
+    typedef T value_type;
+};
+
+template <typename Node> class ListIterator
+{
+    friend class List<typename Node::value_type>;
+    Node* p;
+public:
+    ListIterator(Node* p) : p(p) {}
+    ListIterator(const ListIterator& other) : p(other.p) {}
+    //ListIterator& operator=(ListIterator other) { std::swap(p, other.p); return *this; }
+    ListIterator& operator++() { p = p->next; return *this;}
+    ListIterator& operator++(int) { p = p->next; return *this;}
+    bool operator==(const ListIterator& other) { return p == other.p; }
+    bool operator!=(const ListIterator& other) { return p != other.p; }
+    typename Node::value_type& operator*() const { return p->val; }
+
+
+};
+
+
 template <class T> class List{
 public:
+    typedef ListIterator<Node<T> > iterator;
+    typedef ListIterator<const Node<T> > const_iterator;
+
+
     List<T>(){
+        first = 0;
+        m_last = 0;
         m_size = 0;
-        m_items = nullptr;
     }
 
     List<T>(const List<T>& l){
-        m_size = l.m_size;
-        if (m_size >0)
-            m_items = new T [l.m_size];
-        for (unsigned int i = 0; i < m_size; i++)
-            m_items[i] = l.m_items[i];
+        first = 0;
+        m_last = 0;
+        m_size = 0;
+        Node<T>* current = l.first;
+        while (current != NULL) {
+            this->append(current->val);
+            current = current->next;
+        }
     }
 
 
 
-    List<T>& operator = (const List<T> & v) {
-       if (m_size>0)
-            delete[] m_items;
-        m_size = v.m_size;
+    List<T>& operator = (const List<T> & l) {
+        Node<T>* current = l.first;
+        while (current != NULL) {
+            this->append(current->val);
+            current = current->next;
+        }
+        m_size = l.m_size;
 
-
-        if (m_size >0)
-            m_items = new T [v.m_size];
-        for (unsigned int i = 0; i < m_size; i++)
-            m_items[i] = v.m_items[i];
         return *this;
     }
     ~List<T>(){
-       if (m_size>0)
-            delete[] m_items;
+        Node<T>* temp = first;
+        while(temp != NULL)
+        {
+            temp = temp->next;
+            delete first;
+            first = temp;
+        }
+
     }
 
-    bool operator == (const List<T> l) const {
+    bool operator == (const List<T>& l) const {
         if (l.m_size != m_size) return false;
 
-        for (unsigned int i=0; i<m_size; i++){
-            if (m_items[i] != l.m_items[i]) return false;
+        Node<T>* temp1 = first;
+        Node<T>* temp2 = l.first;
+        while(temp1 != NULL)
+        {
+            if (temp1->val != temp2->val) return false;
+
+            temp1 = temp1->next;
+            temp2 = temp2->next;
         }
+
 
         return true;
     }
 
     void append(const T item){
-        reserve(m_size+1);
-        m_items[m_size] = item;
+        Node<T>* new_last = new Node<T>(item, 0);
+
+
+        if (isEmpty()) {
+            first = new_last;
+        }
+        else {
+            m_last->next = new_last;
+        }
+
+        m_last = new_last;
         m_size++;
     }
-    void reserve(unsigned int capacity) {
-        T* newBuffer = new T[capacity];
 
-        for (unsigned int i = 0; i < m_size; i++){
-            newBuffer[i] = m_items[i];
-        }
-        if(m_size >0)
-            delete[] m_items;
-        m_items = newBuffer;
+    bool isEmpty(){
+        return m_size == 0;
     }
 
     void clear(){
-        if (m_size >0)
-            delete[] m_items;
+        Node<T>* temp = first;
+        while(temp != NULL)
+        {
+            temp = temp->next;
+            first = temp;
+            delete temp;
+        }
         m_size = 0;
+        first = 0;
+        m_last = 0;
     }
 
+
     void replace(size_t item, T value){
-        if (item<m_size){
-            m_items[item] = value;
+
+        Node<T>* temp = first;
+
+        unsigned int counter = 0;
+        while(temp != NULL)
+        {
+            if (counter == item){
+                temp->val = value;
+                return;
+            }
+            temp = temp->next;
+            counter++;
         }
     }
 
 
     void remove(unsigned int item){
-        T* newBuffer = nullptr;
-        if (m_size >1){
-            newBuffer = new T[m_size -1];
+        if (item > m_size) return;
 
-            for (unsigned int i = 0; i <item; i++)
-                newBuffer[i] = m_items[i];
+        Node<T>* temp = first;
 
-            for (unsigned int i = item +1; i <m_size; i++)
-                newBuffer[i-1] = m_items[i];
 
+        if (item == 0){
+            first = temp->next;
+            delete temp;
+            m_size--;
+        }else if (item == (m_size -1)){
+            Node<T>* node = getNode(item -1);
+            node->next = 0;
+            delete m_last;
+            m_last = node;
+            m_size--;
+
+        }else{
+            unsigned int counter = 0;
+            while(temp != NULL)
+            {
+                if (counter == (item-1)){
+                    Node<T>* node = temp->next;
+                    temp->next = node->next;
+
+                    delete node;
+                    m_size--;
+                    return;
+                }
+                temp = temp->next;
+                counter++;
+            }
         }
-        if (m_size > 0)
-            delete[] m_items;
-        m_items = newBuffer;
-        m_size--;
+
+
+
+    }
+
+    Node<T>* getNode(unsigned int item){
+        Node<T>* temp = first;
+        unsigned int counter = 0;
+        while(temp != NULL)
+        {
+            if (counter == item){
+                return temp;
+            }
+            temp = temp->next;
+            counter++;
+        }
+        return nullptr;
     }
 
 
-    T* begin() {
-        return m_items;
+    const_iterator begin() const{
+        return const_iterator(first);
     }
 
-    T* last() {
-        return &m_items[m_size - 1];
+
+    const_iterator end() const{
+        return 0;//const_iterator(last);
     }
 
-    T* end() {
-        return  m_items + size();
+    iterator begin() {
+        return iterator(first);
+    }
+
+
+    iterator end() {
+        return 0;//iterator(last);
     }
 
     size_t size() const{
         return m_size;
     }
 
+    bool has(T value){
+        Node<T>* temp = first;
+
+        while(temp != NULL)
+        {
+            if (temp->val == value) return true;
+            temp = temp->next;
+        }
+        return false;
+    }
+
     T& at(unsigned int i) const{
-        return m_items[i];
+        Node<T>* temp = first;
+
+        unsigned int counter = 0;
+        while(temp != NULL)
+        {
+            if (counter == i){
+                return  temp->val;
+            }
+            temp = temp->next;
+            counter++;
+        }
     }
 
 private:
-    T* m_items; //TODO: replce with something that does not have a constructor
+    Node<T> *first;
+    Node<T> *m_last;
     size_t m_size;
-
-
-
 };
 
 

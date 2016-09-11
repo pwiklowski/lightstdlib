@@ -82,6 +82,22 @@ void testString(){
 
 
 void testList(){
+    List<int> a;
+
+    assert(a.size() == 0);
+    a.append(1);
+    assert(a.size() == 1);
+    a.remove(0);
+    assert(a.size() == 0);
+
+    a.append(2);
+    assert(a.size() == 1);
+
+    a.append(3);
+    assert(a.size() == 2);
+
+
+
 
     List<int> lista;
 
@@ -133,6 +149,17 @@ void testList(){
     l.append(4);
     l.append(5);
 
+    unsigned int counter = 0;
+
+    for (const auto &val :l){
+        int a = val;
+        std::cout << a << std::endl;
+        counter ++;
+
+    }
+
+    assert(counter == l.size());
+
     for ( auto i = l.begin(); i !=l.end(); i++ ) {
         int test = *i;
         std::cout << test << std::endl;
@@ -161,6 +188,36 @@ void testList(){
    assert(l2.at(3) == 4);
    assert(l2.at(4) == 5);
 
+
+   l2.remove(0);
+   assert(l2.size() == 4);
+   assert(l2.at(0) == 2);
+   assert(l2.at(1) == 3);
+   assert(l2.at(2) == 4);
+   assert(l2.at(3) == 5);
+
+
+   l2.remove(3);
+   assert(l2.size() == 3);
+   assert(l2.at(0) == 2);
+   assert(l2.at(1) == 3);
+   assert(l2.at(2) == 4);
+
+
+   l2.remove(1);
+   assert(l2.size() == 2);
+   assert(l2.at(0) == 2);
+   assert(l2.at(1) == 4);
+
+
+
+   List<uint16_t> b;
+   b.append(0);
+   b.append(1);
+    b.remove(1);
+   b.append(2);
+   b.append(3);
+
 }
 
 void testMap(){
@@ -186,8 +243,6 @@ void testMap(){
         std::cout << std::endl;
     }
 
-
-
     assert(map.get("test1") == 1);
     assert(map.get("test2") == 2);
     assert(map.get("test3") == 3);
@@ -195,17 +250,36 @@ void testMap(){
     assert(map.get("test5") == 5);
 
 
+    map.remove("test2");
 
+    assert(map.get("test1") == 1);
+    assert(map.get("test3") == 3);
+    assert(map.get("test4") == 4);
+    assert(map.get("test5") == 5);
+
+    assert(map.has("test2") == false);
+
+
+
+
+    map.insert("test3", 33);
+    assert(map.get("test3") == 33);
 
     Map<String, int> test;
 
     test.insert("test1", 1);
+    assert(test.get("test1") == 1);
+    assert(test.size() == 1);
 
+    test.insert("test1", 1);
     assert(test.get("test1") == 1);
     assert(test.size() == 1);
 
     test.insert("test2", 2);
+    assert(test.get("test2") == 2);
+    assert(test.size() == 2);
 
+    test.insert("test2", 2);
     assert(test.get("test2") == 2);
     assert(test.size() == 2);
 

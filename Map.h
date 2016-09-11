@@ -6,6 +6,10 @@
 
 template <typename Key, typename Value> class Map{
 public:
+    typedef ListIterator<Node<Key> > iterator;
+    typedef ListIterator<const Node<Key> > const_iterator;
+
+
     Map(){
 
     }
@@ -42,6 +46,7 @@ public:
                 return m_values.at(i);
             }
         }
+
     }
 
     bool has(Key k){
@@ -73,21 +78,31 @@ public:
         }
     }
 
-    size_t size(){
+    List<Key>& keys(){
+        return m_keys;
+    }
+
+    size_t size() const{
         return m_keys.size();
     }
-
-    Key* begin() {
-        return &m_keys.at(0);
+    iterator begin() const{
+        return m_keys.begin();
     }
 
-    Key* end() {
-        return &m_keys.at(size());
+    iterator end() const{
+        return m_keys.end();
     }
 
-    Key* last() {
-        return &m_keys.at(size()-1);
+    iterator begin() {
+        return m_keys.begin();
     }
+
+    iterator end() {
+        return m_keys.end();
+    }
+
+
+
 private:
     List<Key> m_keys;
     List<Value> m_values;
