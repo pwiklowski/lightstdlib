@@ -62,6 +62,8 @@ public:
 
 
     List<T>& operator = (const List<T> & l) {
+        first = 0;
+        m_last = 0;
         Node<T>* current = l.first;
         while (current != NULL) {
             this->append(current->val);
@@ -79,7 +81,8 @@ public:
             delete first;
             first = temp;
         }
-
+        first = 0;
+        m_last = 0;
     }
 
     bool operator == (const List<T>& l) const {
