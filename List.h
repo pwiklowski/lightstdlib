@@ -13,7 +13,8 @@ public:
     Node(T val, Node<T>* next){
         this->val = val;
         this->next = next;
-    }    T val;
+    }
+    T val;
     Node<T> *next;
     typedef T value_type;
 };
@@ -123,11 +124,11 @@ public:
 
     void clear(){
         Node<T>* temp = first;
-        while(temp != NULL)
+        while(temp != 0)
         {
+            Node<T>* node = temp;
             temp = temp->next;
-            first = temp;
-            delete temp;
+            delete node;
         }
         m_size = 0;
         first = 0;
@@ -140,7 +141,7 @@ public:
         Node<T>* temp = first;
 
         unsigned int counter = 0;
-        while(temp != NULL)
+        while(temp != 0)
         {
             if (counter == item){
                 temp->val = value;
@@ -171,7 +172,7 @@ public:
 
         }else{
             unsigned int counter = 0;
-            while(temp != NULL)
+            while(temp != 0)
             {
                 if (counter == (item-1)){
                     Node<T>* node = temp->next;
