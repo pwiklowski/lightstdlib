@@ -117,11 +117,11 @@ namespace ssvu
 	{
 		private:
 			using BaseType = Internal::FastFuncImpl<TReturn, TArgs...>;
-			std::shared_ptr<void> storage;
 			template<typename T> inline static void funcDeleter(void* mPtr) { static_cast<T*>(mPtr)->~T(); operator delete(mPtr); }
 
 		public:
-			using BaseType::BaseType;
+                        std::shared_ptr<void> storage;
+                        using BaseType::BaseType;
 
 			inline FastFunc() noexcept = default;
 
