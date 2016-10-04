@@ -60,11 +60,11 @@ public:
     }
 
 
-    size_t size() { return m_size; }
+    size_t size() const { return m_size; }
 
-    char at(size_t i) { return m_str[i]; }
+    char at(size_t i) const { return m_str[i]; }
 
-    bool operator==(String a){
+    bool operator==(const String a) const {
         if (a.size() != size()) return false;
 
         if (memcmp(a.m_str, m_str, m_size) != 0) return false;

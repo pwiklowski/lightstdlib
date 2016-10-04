@@ -103,7 +103,7 @@ public:
         return true;
     }
 
-    void append(const T item){
+    void append(const T& item){
         Node<T>* new_last = new Node<T>(item, 0);
 
 

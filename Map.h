@@ -49,18 +49,20 @@ public:
 
     }
 
-    bool has(Key k){
+    bool has(const Key& k){
         for(unsigned int i = 0; i< m_keys.size(); i++){
-            if (k == m_keys.at(i)){
+            if (k == m_keys.at(i))
+            {
                 return true;
             }
         }
         return false;
     }
 
-    void insert(Key k, Value v){
+    void insert(const Key& k,const Value& v) {
         for(unsigned int i = 0; i< m_keys.size(); i++){
-            if (k == m_keys.at(i)){
+            if (k == m_keys.at(i))
+            {
                 m_values.replace(i, v);
                 return;
             }
