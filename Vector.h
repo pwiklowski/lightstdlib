@@ -1,16 +1,16 @@
-#ifndef SIMPLELIST_H
-#define SIMPLELIST_H
+#ifndef VECTOR_H
+#define VECTOR_H
 
 #include <cstddef>
 
-template <class T> class SimpleList{
+template <class T> class Vector{
 public:
-    SimpleList<T>(){
+    Vector<T>(){
         m_size = 0;
         m_items = nullptr;
     }
 
-    SimpleList<T>(const SimpleList<T>& l){
+    Vector<T>(const Vector<T>& l){
         m_size = l.m_size;
         if (m_size >0)
             m_items = new T [l.m_size];
@@ -20,7 +20,7 @@ public:
 
 
 
-    SimpleList<T>& operator = (const SimpleList<T> & v) {
+    Vector<T>& operator = (const Vector<T> & v) {
        if (m_size>0)
             delete[] m_items;
         m_size = v.m_size;
@@ -32,12 +32,12 @@ public:
             m_items[i] = v.m_items[i];
         return *this;
     }
-    ~SimpleList<T>(){
+    ~Vector<T>(){
        if (m_size>0)
             delete[] m_items;
     }
 
-    bool operator == (const SimpleList<T> l) const {
+    bool operator == (const Vector<T> l) const {
         if (l.m_size != m_size) return false;
 
         for (unsigned int i=0; i<m_size; i++){
